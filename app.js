@@ -35,7 +35,20 @@ app.use(cors({
 }))
 
 // route splitting
-app.use("/api/data", reportRouter)
+app.use("/api/data", async (req, res) => {
+    try {
+        // Make a request to the target server
+        const response = await axios.get('https://dashboard-6bfs.onrender.com/api/data/all');
+        
+        // Forward the response from the target server to the client
+        res.json(response.data);
+    } catch (error) {
+        // Handle errors, e.g., send an error response
+        console.error(error);
+        res.status(500).json({ error: 'Proxy server error' });
+    }
+});
+
 
 // <-----------------------------------------------------------------------> 
 
